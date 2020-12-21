@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Open Weather</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  
+    </head>
+<body>
+    <header>
+        <h1>Погода</h1>
+    </header>
+    <p>Введите название города</p>
+    <p></p>
+    <input name="City" type="text" maxlength="512" id="input_сity" class="searchField"/>
+    <input type="button" value="Показать" onclick="weather()">
+    <p></p>
+    <section>
+    </section>
+
+    <script type="text/javascript">
+        function weather()
+        {
+            var header = document.querySelector('header');
+            var section = document.querySelector('section')
+            var requestURL  = 'http://api.openweathermap.org/data/2.5/weather?id=703448&appid='
+            var appID = '1a2d5b1f7451f81a6f5a5ead0a2f7850'
+
+            var city = document.getElementById("input_сity").value;
+
+            var request = new XMLHttpRequest();
+
+            requestURLID = 'http://api.openweathermap.org/data/2.5/find?q=' + city + '&type=like&APPID=' + appID
+
+            request.open('GET', requestURLID);
+            request.responseType = 'json';
+            request.send();
+            request.onload = function()
+            {
+                var cityweather_json = request.response;
+                showWeather(cityweather_json);
+
+            }
+            function showWeather(jsonObj)
+            {
+                var d = new Date();
+                var sHead = city + " " + d.toDateString(d);
+                sText = " Долгота: "+jsonObj.list[0].coord.lon +" Широта: "+jsonObj.list[0].coord.lat;
+                var Article = document.createElement('article');
+                
+                var H2 = document.createElement('h2');
+                var p = document.createElement('p');
+                
+                H2.textContent=sHead;
+                p.textContent=sText;
+                
+                section.appendChild(H2);
+                section.appendChild(p);
+                section.appendChild(Article);
+                var Article = document.createElement('article');
+                var myPara1 = document.createElement('p');
+                var myPara2 = document.createElement('p');
+                var myPara3 = document.createElement('p');
+                var t1=Math.round(jsonObj.list[0].main.temp-273.16);
+                var t2=Math.round(jsonObj.list[0].main.feels_like-273.16);
+                myPara1.textContent = 'Температура: '+t1+" С";
+                myPara2.textContent = 'Ощущается как: '+t2+" С";
+                myPara3.textContent = 'Ветер: '+jsonObj.list[0].wind.speed+" м/сек";
+                Article.appendChild(myPara1);
+                Article.appendChild(myPara2);
+                Article.appendChild(myPara3);
+                section.appendChild(Article);
+            }
+        }
+    </script>
+</body>
+</html>
